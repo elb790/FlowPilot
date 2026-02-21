@@ -79,15 +79,20 @@ export function extractTechStack(text: string, source: string): ExtractedEntry[]
   return results;
 }
 
-/** 统一提取入口：合并所有提取结果并去重 */
+/** 统一提取入口：标记/决策优先，技术栈仅补充未覆盖的关键词 */
 export function extractAll(text: string, source: string): ExtractedEntry[] {
-  const all = [
-    ...extractTaggedKnowledge(text, source),
-    ...extractDecisionPatterns(text, source),
-    ...extractTechStack(text, source),
-  ];
+  const tagged = extractTaggedKnowledge(text, source);
+  const decisions = extractDecisionPatterns(text, source);
+  const primary = [...tagged, ...decisions];
+  const primaryText = primary.map(e => e.content).join(' ').toLowerCase();
+
+  const tech = extractTechStack(text, source).filter(e => {
+    const keyword = e.content.replace(/^(技术栈|配置项): /i, '').toLowerCase();
+    return !primaryText.includes(keyword);
+  });
+
   const seen = new Set<string>();
-  return all.filter(e => {
+  return [...primary, ...tech].filter(e => {
     if (seen.has(e.content)) return false;
     seen.add(e.content);
     return true;
