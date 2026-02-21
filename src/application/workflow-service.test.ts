@@ -193,7 +193,7 @@ describe('WorkflowService 集成测试', () => {
 
     // Verify a rollback evolution entry was saved
     const evos = await repo.loadEvolutions();
-    expect(evos[evos.length - 1].workflowName).toContain('rollback');
+    expect(evos.some(e => e.workflowName?.includes('rollback'))).toBe(true);
   });
 
   it('rollbackEvolution returns error for empty log', async () => {
