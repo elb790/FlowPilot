@@ -167,8 +167,14 @@ export class WorkflowService {
         if (memories.length) {
           parts.push('## 相关记忆\n\n' + memories.map(m => `- ${m.content}`).join('\n'));
         }
+        // 注入循环检测警告
+        if (this.loopWarning) {
+          parts.push(`## 循环检测警告\n\n${this.loopWarning}`);
+        }
         results.push({ task, context: parts.join('\n\n---\n\n') });
       }
+      // 注入后清空（批量任务共享同一警告）
+      this.loopWarning = null;
       return results;
     } finally {
       await this.repo.unlock();
