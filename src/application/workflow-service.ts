@@ -12,6 +12,7 @@ import { log, setWorkflowName } from '../infrastructure/logger';
 import { collectStats, analyzeHistory } from '../infrastructure/history';
 import { appendMemory, queryMemory, decayMemory } from '../infrastructure/memory';
 import { extractAll } from '../infrastructure/extractor';
+import { detect as detectLoop, type LoopDetection } from '../infrastructure/loop-detector';
 
 export class WorkflowService {
   constructor(
