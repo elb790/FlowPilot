@@ -59,6 +59,12 @@ export class WorkflowService {
     // 衰减归档过期记忆
     await decayMemory(this.repo.projectRoot());
 
+    // 记忆条目超过阈值时自动压缩
+    const memories = await loadMemory(this.repo.projectRoot());
+    if (memories.filter(e => !e.archived).length > 50) {
+      await compactMemory(this.repo.projectRoot());
+    }
+
     return data;
   }
 
