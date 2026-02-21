@@ -16,9 +16,10 @@ afterEach(async () => {
 
 describe('repeatedNoProgress', () => {
   it('detects 3 consecutive similar failures', async () => {
-    await detect(dir, '001', 'build failed missing module X', true);
-    await detect(dir, '001', 'build failed missing module X again', true);
-    const result = await detect(dir, '001', 'build failed missing module X still', true);
+    // Jaccard needs >0.8 for all pairs: use nearly identical long strings
+    await detect(dir, '001', 'build failed cannot find module react dom render', true);
+    await detect(dir, '001', 'build failed cannot find module react dom render', true);
+    const result = await detect(dir, '001', 'build failed cannot find module react dom render', true);
     expect(result).not.toBeNull();
     expect(result!.strategy).toBe('repeatedNoProgress');
     expect(result!.stuck).toBe(true);
