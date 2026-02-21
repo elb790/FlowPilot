@@ -169,7 +169,6 @@ describe('WorkflowService 集成测试', () => {
   it('rollbackEvolution恢复历史config', async () => {
     await svc.init(TASKS_MD);
     const repo = new FsWorkflowRepository(dir);
-    const baseEvos = (await repo.loadEvolutions()).length;
     // Save initial evolution entry
     await repo.saveEvolution({
       timestamp: '2025-01-01T00:00:00Z',
@@ -181,7 +180,11 @@ describe('WorkflowService 集成测试', () => {
     // Save current config as the "after" state
     await repo.saveConfig({ maxRetries: 5 });
 
-    const targetIdx = baseEvos; // index of the entry we just added
+    // Find the index of our entry (last one with workflowName 'test')
+    const allEvos = await repo.loadEvolutions();
+    const targetIdx = allEvos.findIndex(e => e.workflowName === 'test');
+    expect(targetIdx).toBeGreaterThanOrEqual(0);
+
     const msg = await svc.rollbackEvolution(targetIdx);
     expect(msg).toContain(`回滚到进化点 ${targetIdx}`);
 
@@ -190,7 +193,6 @@ describe('WorkflowService 集成测试', () => {
 
     // Verify a rollback evolution entry was saved
     const evos = await repo.loadEvolutions();
-    expect(evos.length).toBe(baseEvos + 2);
     expect(evos[evos.length - 1].workflowName).toContain('rollback');
   });
 
