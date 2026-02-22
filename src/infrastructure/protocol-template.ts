@@ -11,6 +11,7 @@ Run \`node flow.js resume\`:
 
 ### Ad-hoc Dispatch (one-off tasks, no workflow init)
 Dispatch sub-agent(s) via Task tool. No init/checkpoint/finish needed. Iron Rule #4 does NOT apply (no task ID exists). Main agent MAY use Read/Glob/Grep directly for trivial lookups (e.g. reading a single file) — Iron Rule #2 is relaxed in Ad-hoc mode only.
+**记忆查询**: 回答用户问题前，先运行 \`node flow.js recall <关键词>\` 检索历史记忆，将结果作为回答的参考依据。
 
 ### Iron Rules (violating ANY = protocol failure)
 1. **NEVER use TaskCreate / TaskUpdate / TaskList** — use ONLY \`node flow.js xxx\`.

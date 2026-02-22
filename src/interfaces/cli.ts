@@ -118,6 +118,12 @@ export class CLI {
         return await s.rollback(id);
       }
 
+      case 'recall': {
+        const query = rest.join(' ');
+        if (!query) throw new Error('需要查询关键词');
+        return await s.recall(query);
+      }
+
       case 'add': {
         const typeIdx = rest.indexOf('--type');
         const rawType = (typeIdx >= 0 && rest[typeIdx + 1]) || 'general';
@@ -145,6 +151,7 @@ const USAGE = `用法: node flow.js [--verbose] <command>
   resume               中断恢复
   abort                中止工作流并清理 .workflow/ 目录
   rollback <id>        回滚到指定任务的快照 (git revert + 重置后续任务)
+  recall <关键词>       查询相关记忆
   add <描述>           追加任务 [--type frontend|backend|general]
 
 全局选项:

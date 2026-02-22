@@ -215,6 +215,7 @@ Run \`node flow.js resume\`:
 
 ### Ad-hoc Dispatch (one-off tasks, no workflow init)
 Dispatch sub-agent(s) via Task tool. No init/checkpoint/finish needed. Iron Rule #4 does NOT apply (no task ID exists). Main agent MAY use Read/Glob/Grep directly for trivial lookups (e.g. reading a single file) \u2014 Iron Rule #2 is relaxed in Ad-hoc mode only.
+**\u8BB0\u5FC6\u67E5\u8BE2**: \u56DE\u7B54\u7528\u6237\u95EE\u9898\u524D\uFF0C\u5148\u8FD0\u884C \`node flow.js recall <\u5173\u952E\u8BCD>\` \u68C0\u7D22\u5386\u53F2\u8BB0\u5FC6\uFF0C\u5C06\u7ED3\u679C\u4F5C\u4E3A\u56DE\u7B54\u7684\u53C2\u8003\u4F9D\u636E\u3002
 
 ### Iron Rules (violating ANY = protocol failure)
 1. **NEVER use TaskCreate / TaskUpdate / TaskList** \u2014 use ONLY \`node flow.js xxx\`.
@@ -3022,6 +3023,12 @@ ${stats}
     });
     return `\u5DF2\u56DE\u6EDA\u5230\u8FDB\u5316\u70B9 ${index}\uFF08${target.timestamp}\uFF09`;
   }
+  /** recall: 查询相关记忆 */
+  async recall(query) {
+    const memories = await queryMemory(this.repo.projectRoot(), query);
+    if (!memories.length) return "\u65E0\u76F8\u5173\u8BB0\u5FC6";
+    return memories.map((m) => `- [${m.source}] ${m.content}`).join("\n");
+  }
   /** status: 全局进度 */
   async status() {
     return this.repo.loadProgress();
@@ -3344,6 +3351,11 @@ var CLI = class {
         if (!id) throw new Error("\u9700\u8981\u4EFB\u52A1ID");
         return await s.rollback(id);
       }
+      case "recall": {
+        const query = rest.join(" ");
+        if (!query) throw new Error("\u9700\u8981\u67E5\u8BE2\u5173\u952E\u8BCD");
+        return await s.recall(query);
+      }
       case "add": {
         const typeIdx = rest.indexOf("--type");
         const rawType = typeIdx >= 0 && rest[typeIdx + 1] || "general";
@@ -3369,6 +3381,7 @@ var USAGE = `\u7528\u6CD5: node flow.js [--verbose] <command>
   resume               \u4E2D\u65AD\u6062\u590D
   abort                \u4E2D\u6B62\u5DE5\u4F5C\u6D41\u5E76\u6E05\u7406 .workflow/ \u76EE\u5F55
   rollback <id>        \u56DE\u6EDA\u5230\u6307\u5B9A\u4EFB\u52A1\u7684\u5FEB\u7167 (git revert + \u91CD\u7F6E\u540E\u7EED\u4EFB\u52A1)
+  recall <\u5173\u952E\u8BCD>       \u67E5\u8BE2\u76F8\u5173\u8BB0\u5FC6
   add <\u63CF\u8FF0>           \u8FFD\u52A0\u4EFB\u52A1 [--type frontend|backend|general]
 
 \u5168\u5C40\u9009\u9879:

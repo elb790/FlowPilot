@@ -566,6 +566,13 @@ export class WorkflowService {
     return `已回滚到进化点 ${index}（${target.timestamp}）`;
   }
 
+  /** recall: 查询相关记忆 */
+  async recall(query: string): Promise<string> {
+    const memories = await queryMemory(this.repo.projectRoot(), query);
+    if (!memories.length) return '无相关记忆';
+    return memories.map(m => `- [${m.source}] ${m.content}`).join('\n');
+  }
+
   /** status: 全局进度 */
   async status(): Promise<ProgressData | null> {
     return this.repo.loadProgress();
