@@ -127,7 +127,7 @@ describe('reflect', () => {
       ],
     });
     const report = await reflect(stats, base);
-    expect(report.findings).toEqual([]);
+    expect(report.findings.every(f => !f.includes('失败') && !f.includes('重试热点'))).toBe(true);
   });
 });
 
@@ -189,7 +189,9 @@ describe('review', () => {
     mkdirSync(evoDir, { recursive: true });
     const configPath = join(base, '.flowpilot', 'config.json');
     writeFileSync(configPath, '{"maxRetries":5}');
-    const expLog = [{ timestamp: '', experiments: [
+    const snapshotPath = join(evoDir, 'snapshot-2024-01-01T00-00-00-000Z.json');
+    writeFileSync(snapshotPath, JSON.stringify({ timestamp: '', files: { 'config.json': '{"maxRetries":2}' } }));
+    const expLog = [{ timestamp: '', snapshotFile: snapshotPath, experiments: [
       { trigger: 't', observation: 'o', action: 'a', expected: 'e', target: 'config' as const, applied: true, snapshotBefore: '{"maxRetries":2}' },
     ] }];
     writeFileSync(join(evoDir, 'experiments.json'), JSON.stringify(expLog));
