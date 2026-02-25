@@ -142,14 +142,14 @@ describe('experiment', () => {
   });
 
   it('config target modifies known param (maxRetries)', async () => {
-    mkdirSync(join(base, '.flowpilot'), { recursive: true });
-    writeFileSync(join(base, '.flowpilot', 'config.json'), '{"maxRetries":2}');
+    mkdirSync(join(base, '.workflow'), { recursive: true });
+    writeFileSync(join(base, '.workflow', 'config.json'), '{"maxRetries":2}');
     const report: ReflectReport = {
       timestamp: '', findings: [],
       experiments: [{ trigger: 't', observation: 'o', action: '设置 maxRetries 为 5', expected: 'e', target: 'config' }],
     };
     await experiment(report, base);
-    const cfg = JSON.parse(readFileSync(join(base, '.flowpilot', 'config.json'), 'utf-8'));
+    const cfg = JSON.parse(readFileSync(join(base, '.workflow', 'config.json'), 'utf-8'));
     expect(cfg.maxRetries).toBe(5);
   });
 
@@ -187,7 +187,8 @@ describe('review', () => {
     // Setup experiment log for rollback
     const evoDir = join(base, '.flowpilot', 'evolution');
     mkdirSync(evoDir, { recursive: true });
-    const configPath = join(base, '.flowpilot', 'config.json');
+    const configPath = join(base, '.workflow', 'config.json');
+    mkdirSync(join(base, '.workflow'), { recursive: true });
     writeFileSync(configPath, '{"maxRetries":5}');
     const snapshotPath = join(evoDir, 'snapshot-2024-01-01T00-00-00-000Z.json');
     writeFileSync(snapshotPath, JSON.stringify({ timestamp: '', files: { 'config.json': '{"maxRetries":2}' } }));
@@ -205,8 +206,8 @@ describe('review', () => {
   });
 
   it('invalid config.json fails check', async () => {
-    mkdirSync(join(base, '.flowpilot'), { recursive: true });
-    writeFileSync(join(base, '.flowpilot', 'config.json'), '{broken json!!!');
+    mkdirSync(join(base, '.workflow'), { recursive: true });
+    writeFileSync(join(base, '.workflow', 'config.json'), '{broken json!!!');
     const result = await review(base);
     const configCheck = result.checks.find(c => c.name === 'config.json');
     expect(configCheck?.passed).toBe(false);
