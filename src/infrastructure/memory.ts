@@ -269,7 +269,7 @@ function tokenize(text: string): string[] {
     // 尝试 4-3-2 字词表匹配
     for (let len = 4; len >= 2; len--) {
       if (ci + len <= cjk.length) {
-        const word = cjk.slice(ci, ci + len);
+        const word = cjk.slice(ci, ci + len).join('');
         if (CJK_TECH_DICT.has(word)) {
           rawTokens.push(word);
           ci += len;

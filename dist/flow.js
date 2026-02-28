@@ -2118,7 +2118,7 @@ function tokenize(text) {
     let matched = false;
     for (let len = 4; len >= 2; len--) {
       if (ci + len <= cjk.length) {
-        const word = cjk.slice(ci, ci + len);
+        const word = cjk.slice(ci, ci + len).join("");
         if (CJK_TECH_DICT.has(word)) {
           rawTokens.push(word);
           ci += len;
