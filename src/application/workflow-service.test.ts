@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll } from 'vitest';
 import { mkdtemp, rm } from 'fs/promises';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -7,6 +7,21 @@ import { FsWorkflowRepository } from '../infrastructure/fs-repository';
 import { parseTasksMarkdown } from '../infrastructure/markdown-parser';
 import { loadMemory } from '../infrastructure/memory';
 import { readFile } from 'fs/promises';
+
+let savedApiKey: string | undefined;
+let savedAuthToken: string | undefined;
+
+beforeAll(() => {
+  savedApiKey = process.env.ANTHROPIC_API_KEY;
+  savedAuthToken = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.ANTHROPIC_API_KEY;
+  delete process.env.ANTHROPIC_AUTH_TOKEN;
+});
+
+afterAll(() => {
+  if (savedApiKey !== undefined) process.env.ANTHROPIC_API_KEY = savedApiKey;
+  if (savedAuthToken !== undefined) process.env.ANTHROPIC_AUTH_TOKEN = savedAuthToken;
+});
 
 let dir: string;
 let svc: WorkflowService;

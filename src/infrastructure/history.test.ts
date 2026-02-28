@@ -1,10 +1,25 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { tmpdir } from 'os';
 import { collectStats, analyzeHistory, reflect, experiment, review } from './history';
 import type { ReflectReport } from './history';
 import type { ProgressData, WorkflowStats } from '../domain/types';
+
+let savedApiKey: string | undefined;
+let savedAuthToken: string | undefined;
+
+beforeAll(() => {
+  savedApiKey = process.env.ANTHROPIC_API_KEY;
+  savedAuthToken = process.env.ANTHROPIC_AUTH_TOKEN;
+  delete process.env.ANTHROPIC_API_KEY;
+  delete process.env.ANTHROPIC_AUTH_TOKEN;
+});
+
+afterAll(() => {
+  if (savedApiKey !== undefined) process.env.ANTHROPIC_API_KEY = savedApiKey;
+  if (savedAuthToken !== undefined) process.env.ANTHROPIC_AUTH_TOKEN = savedAuthToken;
+});
 
 function makeProgress(overrides?: Partial<ProgressData>): ProgressData {
   return {
